@@ -1,3 +1,4 @@
+<?php defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' ); ?>
 <p>
   <label for="title">
   <?php _e( 'Title', 'wp-newsfw' ) ?>
