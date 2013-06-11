@@ -1,12 +1,185 @@
-(function($){$.fn.flexipage=function(options){var opts=$.extend({},$.fn.flexipage.defaults,options);$.fn.flexipage.options=opts;function buildPager($target,HTML){if(opts.pager_selector==false){$target.after('<ul class="pager">'+HTML+"</ul>");opts.pager_selector=".pager"}else{$(opts.pager_selector,$.fn.flexipage.options.parent_cont).html(HTML)}}return this.each(function(){if(opts.pager==true){opts.navigation==false}if(opts.navigation==true){opts.pager==false}var $target=$(this);$target.data("opts",opts);opts.wrapper=$target.closest("div");opts.actual=opts.firstpage;opts.total_pages=Math.ceil(($(opts.element,$target).length)/opts.perpage);if(opts.pager==true){opts.navigation==false}if(opts.navigation==true){opts.pager==false}if(opts.pager==true){(opts.showcounter==true)?opts.showcounter='<li><span class="actual"></span>/<span class="total">'+opts.total_pages+"</span></li>":opts.showcounter=" ";var pagerHTML='<li class="prev"><a href="#">'+opts.prev_txt+"</a></li>"+opts.showcounter+'<li class="next"><a href="#">'+opts.next_txt+"</a></li>";buildPager($target,pagerHTML);$(opts.pager_selector+" li.next a",opts.wrapper).click(function(e){e.preventDefault();if(opts.actual<=(opts.total_pages-1)){$target.selectPage(opts.actual+1)}});$(opts.pager_selector+" li.prev a",opts.wrapper).click(function(e){e.preventDefault();if(opts.actual<=(opts.total_pages+1)){$target.selectPage(opts.actual-1)}})}if(opts.navigation==true){var navigationHTML="";var actual;for(var i=1;i<=opts.total_pages;i++){(opts.firstpage==i)?actual=' class="active" ':actual="";navigationHTML+="<li"+actual+'><a rel="'+i+'" href="#">'+i+"</a></li>"}buildPager($target,navigationHTML);$(opts.pager_selector+" li a",opts.wrapper).click(function(e){e.preventDefault();var topage=$(this).attr("rel");if(topage<=opts.total_pages&&topage>0){$target.selectPage(topage)}})}if(opts.carousel==true){opts.wrapper_width=$(opts.element,$target).width();$target.wrap('<div class="flexiwrap"></div>');$target.parent().css({overflow:"hidden",position:"relative"});$target.css({overflow:"hidden",position:"absolute",top:"0px",left:"0px"});opts.distances=[];for(var i=0;i<=opts.total_pages;i++){opts.distances[i]=(i*opts.perpage)*opts.wrapper_width}}$target.selectPage(opts.firstpage)})};$.fn.selectPage=function(n){var parent=$(this);var opts=parent.data("opts");if(n=="next"){(opts.actual<opts.total_pages)?n=opts.actual+1:n=opts.total_pages}if(n=="prev"){if(opts.actual>0){n=opts.actual-1}}if(n==0||n==undefined){n=1}if(n>1){var $selected_items=$(opts.element+":lt("+(n*opts.perpage)+"):gt("+(((n-1)*opts.perpage)-1)+")",parent)}else{var $selected_items=$(opts.element+":lt("+(n*opts.perpage)+")",parent)}if(opts.carousel==true){parent.animate({left:"-"+opts.distances[n-1]+"px"},opts.speed,opts.animation)}else{$selected_items.css(opts.visible_css);$(opts.element,parent).not($selected_items).css(opts.hidden_css)}if(opts.navigation==true){$(opts.pager_selector+" li",opts.wrapper).removeClass("active");$(opts.pager_selector+" li:eq("+(n-1)+")",opts.wrapper).addClass("active")}if(opts.pager==true){$(opts.pager_selector+" .actual",opts.wrapper).html(n);$(opts.pager_selector+" .disabled",opts.wrapper).removeClass("disabled");if(n==opts.total_pages){$(opts.pager_selector+" .next,",opts.wrapper).addClass("disabled")}if(n==1){$(opts.pager_selector+" .prev",opts.wrapper).addClass("disabled")}}opts.actual=parseInt(n)};$.fn.flexipage.defaults={element:"li",pager:true,next_txt:"Next &raquo;",prev_txt:"&laquo; Prev",pager_selector:false,perpage:5,showcounter:true,hidden_css:{display:"none"},visible_css:{display:"block"},firstpage:1,navigation:false,carousel:false,speed:300,animation:"linear"}})(jQuery);
+/*!
+ * jquery.pager.js 0.0.1 - https://github.com/yckart/jquery.pager.js
+ * An event-driven pagination plugin for jQuery and you
+ *
+ * Copyright (c) 2012 Yannick Albert (http://yckart.com)
+ * Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php).
+ * 2013/03/16
+ **/
+(function ($, window) {
+
+    var defaults = {
+        perPage: 5, // number of items per page
+        startPage: 1, // page to begin on - NOT zero indexed
+        infinite: false, // true / false
+
+        useHash: false,
+        uuid: "pager",
+        init: $.noop
+    }, uuid = 1;
+
+    $.fn.pager = function (options) {
+        return this.each(function () {
+
+            options = $.extend({}, defaults, options); // set options
+            var wrap = options.wrapper = $(this);
+
+            wrap.bind({
+                'pager:show': function (e, pageNum) {
+                    show(options, pageNum - 1, e);
+                },
+
+                'pager:next': function () {
+                    next(options);
+                },
+
+                'pager:prev': function () {
+                    prev(options);
+                },
+
+                'pager:first': function () {
+                    show(options, 0);
+                },
+
+                'pager:last': function () {
+                    show(options, options.totalPages - 1);
+                },
+
+                'pager:refresh': function (e, newopts) {
+                    refresh(options, newopts);
+                }
+            });
+
+            if(options.useHash) {
+                $(window).bind("hashchange.pager", function(e){
+                    var hash = location.hash;
+                    if(!hash) return show(options, options.startPage-1, e);
+
+                    if( options.uuid === hash.slice(0, hash.lastIndexOf(":")).replace("#", "") ) {
+                        show(options, hash.slice(-1) -1, e);
+                    } else {
+                        show(options, options.currentPage, e);
+                    }
+                });
+            }
+
+            setUp(options);
+        });
+    };
+
+    function setUp(options) {
+        options.uuid = options.uuid + uuid++;
+        options.perPage = parseInt(options.perPage);
+        options.items = options.wrapper.children();
+        options.totalItems = options.items.length;
+        options.totalPages = Math.ceil(options.totalItems / options.perPage);
+        options.currentPage = parseInt(options.startPage) - 1;
+        options.first = isFirstPage(options, options.currentPage);
+        options.last = isLastPage(options, options.currentPage);
+        options.pages = [];
+        if (options.currentPage > options.totalPages - 1) options.currentPage = options.totalPages - 1;
+
+        options.items.hide();
+
+        for (var i = 0; i < options.totalPages; i++) {
+            var startItem = options.perPage * i;
+            options.pages[i] = options.items.slice(startItem, (startItem + options.perPage));
+        }
+
+        $(window).trigger("hashchange.pager");
+        options.init.call(this, options.currentPage + 1, options.totalPages);
+    }
+
+    function refresh(options, newopts) {
+        if (newopts !== undefined) $.extend(options, newopts); // update options
+        options.startPage = parseInt(options.currentPage) + 1;
+        setUp(options);
+    }
+
+    function next(options) {
+        if (options.infinite) {
+            show(options, (options.last ? 0 : options.currentPage + 1));
+        } else {
+            show(options, (options.last ? options.totalPages - 1 : options.currentPage + 1));
+        }
+    }
+
+    function prev(options) {
+        if (options.infinite) {
+            show(options, (options.first ? options.totalPages - 1 : options.currentPage - 1));
+        } else {
+            show(options, (options.first ? 0 : options.currentPage - 1));
+        }
+    }
+
+    function show(options, pageNum, e) {
+        if (pageNum > options.totalPages - 1) pageNum = options.totalPages - 1;
+
+        if (!options.pages[options.currentPage].is(':animated')) {
+            options.wrapper.trigger('pager:started', options.currentPage + 1);
+
+            $.fn.pager.swapPages(options, pageNum, function () {
+
+                options.currentPage = pageNum;
+                options.first = isFirstPage(options, options.currentPage) ? true : false;
+                options.last = isLastPage(options, options.currentPage) ? true : false;
+
+                options.wrapper.trigger('pager:finished', [options.currentPage + 1, options.first, options.last]);
+
+            });
+
+            // set hash if available
+            if(!e && options.useHash) window.location.hash = options.uuid + ":" + (options.currentPage + 1);
+        }
+
+    }
+
+    // public, can override this if neccessary
+    $.fn.pager.swapPages = function (options, pageNum, onFinish) {
+        options.pages[options.currentPage].hide();
+        options.pages[pageNum].show();
+        onFinish();
+    };
+
+    // utility functions
+    function isFirstPage(opts, internalPageNum) {
+        return (internalPageNum === 0);
+    }
+
+    function isLastPage(options, internalPageNum) {
+        return (internalPageNum === options.totalPages - 1);
+    }
+
+}(jQuery, window));
 
 (function ($) {
 	"use strict";
 	$(function () {
-		$('#wp-newsfw-list').flexipage({
-    		perpage: 10,
-    		next_txt: pager.next,
-    		prev_txt: pager.prev
-		});
+		var wrap = $('.wp-newsfw-list');
+
+            wrap.pager({
+                perPage: pager.perpage,
+                useHash: true,
+                init: function (startnum, totalnum) {
+                    $('#count').text(startnum);
+                    $('#total').text(totalnum);
+                }
+            });
+
+            // set up click events to trigger the pagination plugins' behaviour
+            $('.prev').click(function () {
+                wrap.trigger('pager:prev');
+                return false;
+            });
+
+            $('.next').click(function () {
+                wrap.trigger('pager:next');
+                return false;
+            });
+
+            // listen out for events triggered by the plugin to update the counter
+            wrap.bind('pager:finished', function (e, num, isFirst, isLast) {
+                $('#count').text(num);
+            });
 	});
 }(jQuery));

@@ -3,7 +3,7 @@
 Plugin Name: WP News Feed Widget
 Plugin URI: http://remyperona.fr/wp-news-feed-widget/
 Description: A news feed widget with pagination
-Version: 1.0
+Version: 1.1
 Author: Rémy Perona
 Author URI: http://remyperona.fr
 Author Email: remperona@gmail.com
@@ -52,10 +52,7 @@ class RP_Wpnwf extends WP_Widget {
 		);
 
 		// Register site styles and scripts
-		$wp_newsfw_data = get_option( 'widget_wp-newsfw' );
-		if ( $wp_newsfw_data[2]['css_active'] == 1 ) {
-		    add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
-		}
+        add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_widget_scripts' ) );
 
 	} // end constructor
@@ -78,6 +75,7 @@ class RP_Wpnwf extends WP_Widget {
 
 		$title = empty( $instance['title'] ) ? '' : apply_filters( 'widget_title', $instance['title'] );
 		$numberposts = empty( $instance['numberposts'] ) ? '' : apply_filters( 'numberposts', $instance['numberposts'] );
+		$posts_per_page = empty( $instance['posts_per_page'] ) ? '' : apply_filters( 'posts_per_page', $instance['posts_per_page'] );
 
 		include( plugin_dir_path( __FILE__ ) . '/views/widget.php' );
 
@@ -97,6 +95,7 @@ class RP_Wpnwf extends WP_Widget {
 
 		$instance['title'] = strip_tags( stripslashes( $new_instance['title'] ) );
 		$instance['numberposts'] = strip_tags( stripslashes( $new_instance['numberposts'] ) );
+		$instance['posts_per_page'] = strip_tags( stripslashes( $new_instance['posts_per_page'] ) );
 		$instance['css_active'] = strip_tags( stripslashes( $new_instance['css_active'] ) );
 
 		return $instance;
@@ -110,18 +109,19 @@ class RP_Wpnwf extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-    	// TODO:	Define default values for your variables
 		$instance = wp_parse_args(
 			(array) $instance,
 			array(
 			    'title' => __( 'News feed', 'wp-newsfw' ),
-			    'numberposts' => '50',
+			    'numberposts' => 50,
+			    'posts_per_page' => 10,
 			    'css_active' => 1
 			)
 		);
 
 		$title = esc_attr( $instance['title'] );
 		$numberposts = esc_attr( $instance['numberposts'] );
+		$posts_per_page = esc_attr( $instance['posts_per_page'] );
 		$css_active = esc_attr( $instance['css_active'] );
 
 		// Display the admin form
@@ -137,7 +137,10 @@ class RP_Wpnwf extends WP_Widget {
 	 * Registers and enqueues widget-specific styles.
 	 */
 	public function register_widget_styles() {
-		wp_enqueue_style( 'wp-newsfw-widget-styles', plugins_url( 'wp-news-feed-widget/css/wp-newsfw.css' ) );
+	    $css_active = $this->widget_options( 'css_active' );
+	    if ( $css_active == 1 ) {
+		    wp_enqueue_style( 'wp-newsfw-widget-styles', plugins_url( 'wp-news-feed-widget/css/wp-newsfw.css' ) );
+		}
 
 	} // end register_widget_styles
 
@@ -145,11 +148,16 @@ class RP_Wpnwf extends WP_Widget {
 	 * Registers and enqueues widget-specific scripts.
 	 */
 	public function register_widget_scripts() {
-		wp_enqueue_script( 'wp-newsfw-script', plugins_url( 'wp-news-feed-widget/js/wp-newsfw.js' ), array('jquery') );
-		wp_localize_script( 'wp-newsfw-script', 'pager', array( 'prev' => __( 'Prev', 'wp-newsfw' ), 'next' => __( 'Next', 'wp-newsfw' ) ) );
+		wp_enqueue_script( 'wp-newsfw-script', plugins_url( 'wp-news-feed-widget/js/wp-newsfw.min.js' ), array('jquery') );
+		wp_localize_script( 'wp-newsfw-script', 'pager', array( 'perpage' => $this->widget_options( 'posts_per_page' ) ) );
 
 	} // end register_widget_scripts
 
+    public function widget_options( $key ) {
+        $widget_id = $this->number;
+	    $wp_newsfw_data = get_option( 'widget_wp-newsfw' );
+	    return $wp_newsfw_data[$widget_id][$key];
+    }
 } // end class
 
 add_action( 'widgets_init', create_function( '', 'register_widget("RP_Wpnwf");' ) );

@@ -1,18 +1,15 @@
 /* ul list wrapper */
 .wp-newsfw-list {
-    border: 1px solid #000;
     padding-left: 0;
 }
 
 /* list items */
 .wp-newsfw-item {
-    border-bottom: 1px solid #000;
     padding: 5px;
 }
 
 .wp-newsfw-item:nth-child(odd),
 .pager {
-    background: #f2f7fc;
 }
 
 /* ul pager wrapper */
@@ -21,7 +18,8 @@
 }
 
 /* pager item */
-.pager li {
+.pager a,
+.pager span {
     display: inline-block;
     padding: 5px 0;
 }
