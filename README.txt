@@ -61,7 +61,7 @@ More configuration is coming in future releases.
 
 == Changelog ==
 
-== 1.1.1 ==
+= 1.1.1 =
 * Security fixes
 * Wrong label corrected in admin form
 
