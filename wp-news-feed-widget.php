@@ -3,7 +3,7 @@
 Plugin Name: WP News Feed Widget
 Plugin URI: http://remyperona.fr/wp-news-feed-widget/
 Description: A news feed widget with pagination
-Version: 1.1
+Version: 1.1.1
 Author: Rémy Perona
 Author URI: http://remyperona.fr
 Author Email: remperona@gmail.com
@@ -93,10 +93,10 @@ class RP_Wpnwf extends WP_Widget {
 
 		$instance = $old_instance;
 
-		$instance['title'] = strip_tags( stripslashes( $new_instance['title'] ) );
-		$instance['numberposts'] = strip_tags( stripslashes( $new_instance['numberposts'] ) );
-		$instance['posts_per_page'] = strip_tags( stripslashes( $new_instance['posts_per_page'] ) );
-		$instance['css_active'] = strip_tags( stripslashes( $new_instance['css_active'] ) );
+		$instance['title'] = sanitize_text_field( $new_instance['title'] );
+		$instance['numberposts'] = sanitize_text_field( $new_instance['numberposts'] );
+		$instance['posts_per_page'] = sanitize_text_field( $new_instance['posts_per_page'] );
+		$instance['css_active'] = sanitize_text_field( $new_instance['css_active'] );
 
 		return $instance;
 

@@ -13,7 +13,7 @@
   <span class="description"><?php _e( '-1 will include all posts', 'wp-newsfw' ) ?></span>
 </p>
 <p>
-  <label for="numberposts">
+  <label for="posts_per_page">
   <?php _e( 'Number of posts to display on one page', 'wp-newsfw' ) ?>
   </label>  
   <input type="text" id="<?php echo $this->get_field_id('posts_per_page'); ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" value="<?php echo $posts_per_page; ?>"><br>

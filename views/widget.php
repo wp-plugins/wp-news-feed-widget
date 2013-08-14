@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-echo $before_title . $title . $after_title;
+echo $before_title . esc_html( $title ) . $after_title;
 $posts = new WP_Query( array( 'post_type' => 'post', 'posts_per_page' => $numberposts, 'ignore_sticky_posts' => 1 ) );
 if ( $posts->have_posts() ) : ?>
     <ul id= "<?php echo $widget_id ?>" class="wp-newsfw-list">

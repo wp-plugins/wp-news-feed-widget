@@ -5,7 +5,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6V74B
 Tags: widget, news
 Requires at least: 3.2
 Tested up to: 3.6
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,7 +61,16 @@ More configuration is coming in future releases.
 
 == Changelog ==
 
+== 1.1.1 ==
+* Security fixes
+* Wrong label corrected in admin form
+
 = 1.1 =
+* changed basic css
+* new js script for pagination + minification
+* HTML5 time markup for time/date
+* new option : posts per page
+* new string translated in french
 
 = 1.0 =
 * Initial release.
