@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP News feed widget\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-11 23:59+0100\n"
-"PO-Revision-Date: 2013-06-12 00:00+0100\n"
+"POT-Creation-Date: 2013-10-24 22:05+0100\n"
+"PO-Revision-Date: 2013-10-24 22:06+0100\n"
 "Last-Translator: Rémy Perona <remperona@gmail.com>\n"
 "Language-Team: Rémy Perona <remperona@gmail.com>\n"
 "Language: fr_FR\n"
@@ -13,21 +13,41 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../wp-news-feed-widget.php:47
+#: ../wp-news-feed-widget.php:51
 msgid "WP News Feed Widget"
 msgstr "WP Widget flux d'actualités"
 
-#: ../wp-news-feed-widget.php:50
+#: ../wp-news-feed-widget.php:54
 msgid "A news feed widget with pagination"
 msgstr "Widget qui affiche vos dernières actualités avec pagination"
 
-#: ../wp-news-feed-widget.php:115
+#: ../wp-news-feed-widget.php:121
 msgid "News feed"
 msgstr "Flux d'actualités"
+
+#: ../wp-news-feed-widget.php:172
+msgid "Prev"
+msgstr "Préc"
+
+#: ../wp-news-feed-widget.php:172
+msgid "Next"
+msgstr "Suiv"
+
+#: ../wp-news-feed-widget.php:238
+msgid "No posts for this category"
+msgstr "Aucun article dans cette catégorie"
+
+#: ../wp-news-feed-widget.php:252
+msgid "Something not okay here"
+msgstr "Quelque chose ne va pas ici"
+
+#: ../wp-news-feed-widget.php:255
+msgid "No category selected"
+msgstr "Aucune catégorie sélectionnée"
 
 #: ../views/admin.php:4
 msgid "Title"
@@ -45,22 +65,36 @@ msgstr "-1 incluera tous les articles"
 msgid "Number of posts to display on one page"
 msgstr "Nombre d'articles à afficher par page"
 
-#: ../views/admin.php:23
+#: ../views/admin.php:24
+msgid "Truncate title ?"
+msgstr "Tronquer le titre ?"
+
+#: ../views/admin.php:29
+msgid "Title length"
+msgstr "Longueur du  titre"
+
+#: ../views/admin.php:36
 msgid "Use plugin's css ?"
 msgstr "Utiliser le css de l'extension ?"
 
-#: ../views/admin.php:26
-msgid "Yes"
-msgstr "Oui"
+#: ../views/admin.php:41
+msgid "Choose your style"
+msgstr "Choisissez votre style"
 
-#: ../views/admin.php:27
-msgid "No"
-msgstr "Non"
+#: ../views/admin.php:44
+msgid "Light"
+msgstr "Clair"
 
-#: ../views/widget.php:13
-msgid "Prev"
-msgstr "Préc"
+#: ../views/admin.php:45
+msgid "Dark"
+msgstr "Sombre"
 
-#: ../views/widget.php:15
-msgid "Next"
-msgstr "Suiv"
+#: ../views/widget.php:8
+msgid "Choose your category"
+msgstr "Choisir votre catégorie"
+
+#~ msgid "Yes"
+#~ msgstr "Oui"
+
+#~ msgid "No"
+#~ msgstr "Non"
