@@ -1,0 +1,70 @@
+/* Select category dropdown */
+    .wp-newsfw-select> .postform {
+       width: 100%
+    }
+
+/* pager wrapper */
+.wpnewsfw-pager,
+.info_text {
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+/* pager items */
+.page_link {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255, 0.25 );
+    padding: 0.25em;
+}
+
+.active_page {
+    background: rgba(255,255,255, 0.25 );
+}
+
+.no_more {
+    opacity: 0.5;
+}
+/* prev & next items */
+.visually-hidden {
+	position: absolute;
+	left: -7000px;
+	overflow: hidden;
+}
+[dir=rtl] .visually-hidden {
+	left: auto;
+	right: -7000px;
+}
+
+.previous_link,
+.next_link {
+    text-decoration: none;
+}
+    .previous_link:before,
+    .next_link:after {
+        border-radius: 1em;
+        color: #000;
+        font-weight: 700;
+    }
+
+/* prev item */
+    .previous_link:before {
+        content:'\3008';
+        margin-right: 0.5em;
+        padding: 0.25em 0.75em 0.25em 0;
+        background: rgba(255,255,255,0.25);
+        visibility: visible;
+    }
+
+/* next item */
+    .next_link:after {
+        content:'\3009';
+        margin-left: 0.5em;
+        padding: 0.25em 0 0.25em 0.75em;
+        background: rgba(255,255,255,0.25);
+        visibility: visible;
+    }
+
+/* list items */
+.wp-newsfw-item {
+    padding: 0.25em 0;
+}
